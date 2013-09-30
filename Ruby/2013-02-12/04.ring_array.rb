@@ -1,4 +1,4 @@
-#!/usr/local/ruby/bin/ruby -Ku
+#!/usr/bin/env ruby
 class RingArray < Array
   def [](i)
     idx=i % size
