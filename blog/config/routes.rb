@@ -1,4 +1,6 @@
 Blog::Application.routes.draw do
+  get "say/hello"
+  get "say/goodbye"
   resources :posts do
     resources :comments
   end
