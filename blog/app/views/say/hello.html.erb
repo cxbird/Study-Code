@@ -1,5 +1,8 @@
 <h1>Hello from Rails!</h1>
 <p>
   Time = <%= @time  %><br />
-  It is now <%= Time.now %>.
+  It is now <%= Time.now %>.<br />
+  Say <a href="/say/goodbye">Goodbye</a>!<br />
+  <br />
+  该说<%= link_to "再见",say_goodbye_path %>了！
 </p>
