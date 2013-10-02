@@ -10,3 +10,11 @@
 <%= 1+2 %><br />
 <%= "cow" + "boy" %><br />
 <%= 1.hour.from_now %><br />
+<hr />
+Files list:<% i = 1 %>
+<ul>
+  <% for file in @files %>
+    <li><%= i %>:<%= file %></li>
+    <% i = i + 1 %>
+  <% end %>
+</ul>
