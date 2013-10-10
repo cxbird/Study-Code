@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/home/Napoleon/StudyCode/blog/db/migrate'
+let g:netrw_dirhist_2='/home/Napoleon/StudyCode/blog/app/views/comments'
+let g:netrw_dirhist_3='/home/Napoleon/StudyCode/blog/app/views/say'
+let g:netrw_dirhist_4='/home/Napoleon/StudyCode/depot/app/views/layouts'
+let g:netrw_dirhist_5='/home/Napoleon/.vim/bundle'
+let g:netrw_dirhist_6='/home/Napoleon/.vim'
+let g:netrw_dirhist_7='/home/Napoleon/.vim/autoload'
