@@ -37,6 +37,23 @@ class ProductTest < ActiveSupport::TestCase
 		assert_equal "must be greater than or equal to 0.01.",
 			product.errors[:price].join(';')
 	end
+	
+	test "product title length 必须大于2个字符，小于50个字符." do
+		product = Product.new(
+			:description	=> "yyy",
+			:image_url		=> "zzz.jpg",
+			:price => 1
+		)
+		
+		product.title = '1'
+		assert product.invalid?, "小于2个字符"
+
+		product.title = '12'
+		assert product.invalid?
+
+		product.title = '12345678901234567890123456789012345678901234567890.'
+		assert product.invalid?, "大于50个字符"
+	end
 
 	def new_product(image_url)
 		Product.new(
