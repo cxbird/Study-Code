@@ -2,6 +2,11 @@
 	<p id="notice"><%= notice %></p>
 <% end %>
 
+<% if session[:counter] > 5 %>
+	<div style="float:right">
+		商店已有 <%= pluralize(session[:counter], 'user')%> 访问了。
+	</div>
+<% end %>
 <h1>Your Pragmatic Catalog</h1>
 
 <% @products.each do |product|%>
