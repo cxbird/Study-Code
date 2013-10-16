@@ -5,6 +5,9 @@
 	<% end %>
 </ul>
 
+<%= button_to '清空购物车', @cart, :method => :delete, 
+	:confirm => "您确认清空No. #{@cart.id}的购物车吗？" %>
+
 <%= link_to 'Edit', edit_cart_path(@cart) %> |
 <%= link_to 'Back', carts_path %> |
 <%= link_to 'Back to Store', store_path %>
