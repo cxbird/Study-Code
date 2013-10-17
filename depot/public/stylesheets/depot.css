@@ -47,7 +47,6 @@
         font: bold smaller sans-serif;
 }
 
-
 #store h1 {
         font:  150% sans-serif;
         color: #226;
@@ -151,4 +150,18 @@
 
 #store .entry form, #store .entry form div {
 	display: inline
+}
+
+/* Style for the cart in the main page */
+#store .cart_title {
+	font: 120% bold;
+}
+
+#store .item_price, #store .total_line {
+	text-align: right;
+}
+
+#store .total_line .total_cell {
+	font-weight: bold;
+	border-top: 1px solid #595;
 }
