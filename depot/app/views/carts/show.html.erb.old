@@ -1,0 +1,24 @@
+<h2>Your Pragmatic Cart</h2>
+<table>
+	<% @cart.line_items.each do |item| %>
+		<tr>
+			<td><%= item.quantity %> &times;</td>
+			<td><%= item.product.title %></td>
+			<td class="item_price"><%= number_to_currency(item.total_price) %></td>
+			<td><%= button_to "清除此商品", item, :method => :delete,
+				:confirm => "您确认清除此商品吗？" %></td>
+		</tr>
+	<% end %>
+	<tr class="total_line">
+		<td colspan="2">Total</td>
+		<td class="total_cell"><%= number_to_currency(@cart.total_price) %></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<%= button_to '清空购物车', @cart, :method => :delete, 
+	:confirm => "您确认清空No. #{@cart.id}的购物车吗？" %>
+
+<%= link_to 'Edit', edit_cart_path(@cart) %> |
+<%= link_to 'Back', carts_path %> |
+<%= link_to 'Back to Store', store_path %>
