@@ -1,6 +1,13 @@
-# page.replace_html('cart', render(@cart))
-$("#notice").hide();
-if ($("#cart tr").length == 1) {
-	$("#cart").show('blind', 1000);
-}
-$('#cart').html("<%= escape_javascript(render(@cart)) %>")
+page.replace_html('cart', render(@cart))
+page[:current_item].visual_effect :hightlight,
+	:startcolor => "#88ff88",
+	:endcolor => "#114411"
+
+
+
+
+#$("#notice").hide();
+#if ($("#cart tr").length == 1) {
+#	$("#cart").show('blind', 1000);
+#}
+#$('#cart').html("<%= escape_javascript(render(@cart)) %>")
