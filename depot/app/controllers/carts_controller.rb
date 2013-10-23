@@ -57,8 +57,8 @@ class CartsController < ApplicationController
 		@cart = current_cart
     @cart.destroy
     respond_to do |format|
-      format.html { redirect_to store_url,
-				:notice => '购物车已被清空～～～' }
+      format.html { redirect_to store_url }
+				#:notice => '购物车已被清空～～～' }
       format.json { head :no_content }
     end
   end
