@@ -34,8 +34,8 @@ Depot::Application.configure do
 		:port							=> 587,
 		:domain						=> "qyec.com.cn",
 		:authentication		=> "plain",
-		:user_name				=> "*******",
-		:password					=> "*******",
+		:user_name				=> "cxbird",
+		:password					=> "******",
 		:enable_starttls_auto => true
 	}
 
