@@ -39,6 +39,7 @@ class OrdersController < ApplicationController
 				Cart.destroy(session[:cart_id])
 				session[:cart_id] = nil
 				Notifier.order_received(@order).deliver
+				#Notifier.order_shipped(@order).deliver
 
         format.html { redirect_to store_url notice: '谢谢你下的订单。' }
         format.json { render action: 'show', status: :created, location: @order }
