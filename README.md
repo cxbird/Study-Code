@@ -1,5 +1,5 @@
 # Study Code
-1. Study git; 
+1. Study git;
 2. Study Ruby;
 3. [MarkDown 编辑器](http://benweet.github.io/stackedit)
 4. [MarkDown 语法说明*1*](http://markdown.tw)
