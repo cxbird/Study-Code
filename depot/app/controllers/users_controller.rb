@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   def destroy
 		begin
 	    @user.destroy
-			flash[:notice] = "User #(@user.name) deleted"
+			flash[:notice] = "User #{@user.name} deleted"
 		rescue Exception => e
 			flash[:notice] = e.message
 		end
