@@ -1,0 +1,8 @@
+es:
+  layouts:
+    applications:
+      title: "Publicaciones de Pragmatic"
+      home: "主页"
+      questions: "问题"
+      news: "新闻"
+      contact: "联系我们"
