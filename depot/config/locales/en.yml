@@ -28,3 +28,11 @@ en:
       questions: "Questions"
       news: "News"
       contact: "Contact"
+
+  currency:
+    format:
+      unit:       "$"
+      precision:  2
+      separator:  "."
+      delimiter:  ","
+      format:     "%u%n"
