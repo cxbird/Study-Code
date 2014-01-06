@@ -13,7 +13,10 @@ Sample::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  #
+  # match "/",  to:"static_pages#home", via:"get"
+  # 上面方式无法生成 “root_path” 具名路由，下面可以！！！
+  root 'static_pages#home'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
