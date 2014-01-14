@@ -1,4 +1,5 @@
 Sample::Application.routes.draw do
+  get "users/new"
 =begin
   get "static_pages/home"
   get "static_pages/help"
