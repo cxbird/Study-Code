@@ -6,6 +6,7 @@ Sample::Application.routes.draw do
   get "static_pages/about"
   get "static_pages/contact"
 =end
+  match "/signup",  to:"users#new",             via:"get"
   match "/help",    to:"static_pages#help",     via:"get"
   match "/about",   to:"static_pages#about",    via:"get"
   match "/contact", to:"static_pages#contact",  via:"get"
