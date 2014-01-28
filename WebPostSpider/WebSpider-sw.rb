@@ -114,8 +114,12 @@ def spiderData(mProject)
     i += 1
   end
 
-  new_file = File.exist?("~/SpiderData/" + t_filename + "(" + $date.year.to_s + "年度).csv")
-  f = File.open("~/SpiderData/" + t_filename + "(" + $date.year.to_s + "年度).csv","a:GB2312")
+  if not Dir.exist?("/home/Napoleon/SpiderData/")
+    Dir.mkdir("/home/Napoleon/SpiderData")
+  end
+
+  new_file = File.exist?("/home/Napoleon/SpiderData/" + t_filename + "(" + $date.year.to_s + "年度).csv")
+  f = File.open("/home/Napoleon/SpiderData/" + t_filename + "(" + $date.year.to_s + "年度).csv","a:GB2312")
   if not new_file then f.write(t_title) end
   #puts web_data.encoding
   f.write(web_data)
