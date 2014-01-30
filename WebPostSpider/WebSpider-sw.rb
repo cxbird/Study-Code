@@ -1,3 +1,7 @@
+=begin
+  pushData(pushNode,is4)
+  切断数据，去除空格，留下有效数据
+=end
 def pushData(pushNode,is4)
   i = pushNode.children.count - 1
   if i == 0 then
@@ -21,6 +25,10 @@ def pushData(pushNode,is4)
   return dataArray
 end
 
+=begin
+  findTimeData(s_data,s_time,isEnd)
+  查找对应时间的数据
+=end
 def findTimeData(s_data,s_time,isEnd)
   dataTemp = s_data.rassoc(s_time)
   t_char = ","
@@ -33,6 +41,10 @@ def findTimeData(s_data,s_time,isEnd)
   end
 end
 
+=begin
+  spiderData(mProject)
+  组合对应项目的数据
+=end
 def spiderData(mProject)
   case mProject
   when "sx"
@@ -114,12 +126,14 @@ def spiderData(mProject)
     i += 1
   end
 
-  if not Dir.exist?("/home/Napoleon/SpiderData/")
-    Dir.mkdir("/home/Napoleon/SpiderData")
+  m_path = "/home/Napoleon/SpiderData/"
+  #m_path = "./"
+  if not Dir.exist?(m_path)
+    Dir.mkdir(m_path)
   end
 
-  new_file = File.exist?("/home/Napoleon/SpiderData/" + t_filename + "(" + $date.year.to_s + "年度).csv")
-  f = File.open("/home/Napoleon/SpiderData/" + t_filename + "(" + $date.year.to_s + "年度).csv","a:GB2312")
+  new_file = File.exist?(m_path + t_filename + "(" + $date.year.to_s + "年度).csv")
+  f = File.open(m_path + t_filename + "(" + $date.year.to_s + "年度).csv","a:GB2312")
   if not new_file then f.write(t_title) end
   #puts web_data.encoding
   f.write(web_data)
@@ -127,7 +141,25 @@ def spiderData(mProject)
   print $date.to_s + " " + t_filename + "数据已保存成功！\n"
 end
 
-# Post Data for require.
+=begin
+  日志保存，保存网站访问情况
+=end
+def saveLog(log_note)
+  f = File.open("spider.log","a")
+  f.write(log_note)
+  f.close
+end
+
+=begin
+  判断起始日期
+=end
+def checkDate()
+
+end
+
+=begin
+  main 
+=end
 require 'net/http'
 uri=URI("http://www.ctg.com.cn/inc/sqsk.php")
 
@@ -141,8 +173,26 @@ end while m_year.strip.empty?
 dateBegin = Date.new(m_year.to_i,1,1)
 dateEnd = Date.new(m_year.to_i,12,31)
 (dateBegin..dateEnd).each do |dateSpider|
-  print "\n------> " + dateSpider.to_s + " 数据请求中 ………… <-----\n"
-  res=Net::HTTP.post_form(uri,'NeedCompleteTime2' => dateSpider.to_s)
+  print "\n------>>> " + dateSpider.to_s + " 数据请求中 <<<-----\n"
+
+  m_try = 0
+  begin
+  res = Net::HTTP.post_form(uri,'NeedCompleteTime2' => dateSpider.to_s)
+  rescue => e #Net::HTTPRequestTimeOut 
+    if m_try == 0
+      print "Error: ----->>> " + dateSpider.to_s + " 数据请求失败！ <<<-----\n"
+    elsif m_try < 3 
+      print "Error: ----->>> " + dateSpider.to_s + " 数据请求失败！ <<<-----(第 " + m_try.to_s + " 次重试)\n"
+    else
+      print "Error: ----->>> " + dateSpider.to_s + " 数据请求失败！请稍后再试！！\n"
+      saveLog(dateSpider.to_s + "|GetData|ERR(" + e.to_s + ")\n")
+      #raise
+      exit
+    end
+    m_try += 1
+    retry
+  end
+  saveLog(dateSpider.to_s + "|GetData|OK\n")
   #puts res.body
   #puts res.code
   print dateSpider.to_s + " 数据请求返回：" + res.message + " !\n"
