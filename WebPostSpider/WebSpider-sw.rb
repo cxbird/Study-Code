@@ -126,8 +126,8 @@ def spiderData(mProject)
     i += 1
   end
 
-  m_path = "/home/Napoleon/SpiderData/"
-  #m_path = "./"
+  #m_path = "/home/Napoleon/SpiderData/"
+  m_path = "./"
   if not Dir.exist?(m_path)
     Dir.mkdir(m_path)
   end
@@ -153,7 +153,38 @@ end
 =begin
   判断起始日期
 =end
-def checkDate()
+def checkDate(check_year)
+  no_err_date = [Date.new(check_year.to_i,1,1),Date.new(check_year.to_i,12,31)]
+
+  # 文件不存在，肯定没有ERR，那肯定从新采集
+  if not File.exist?("spider.log")
+    return no_err_date
+  end
+  r_year = Regexp.new(check_year.to_s + "-*")
+  open("spider.log","r+") do |f|
+    checkArray = f.readlines.select { |a| a =~ r_year }
+  end
+  p checkArray
+  
+  # 没有数据，代表没有采集过
+  if checkArray.nil?
+    return no_err_date
+  end
+
+  # 有数据需要判断一下，没有错误，但是否结束
+  if checkArray.select { |a| a =~ /ERR/ }.nil?
+    if checkArray.last.split("|")[0] == check_year + "-12-31"
+      print check_year + " 年度数据已经完全正常采集，无需再次采集，谢谢使用。\n"
+      exit
+    else
+      a_date = checkArray.last.split("|")[0]
+      b_date = Date.parse(a_date) + 1
+      print check_year + " 年度数据已经采集到 " + a_date + " ，将从 " + b_date.to_s + " 继续采集。\n"
+      return [b_date, Date.new(check_year.to_i,12,31)]
+    end
+  end
+
+
 
 end
 
@@ -177,7 +208,7 @@ dateEnd = Date.new(m_year.to_i,12,31)
 
   m_try = 0
   begin
-  res = Net::HTTP.post_form(uri,'NeedCompleteTime2' => dateSpider.to_s)
+    res = Net::HTTP.post_form(uri,'NeedCompleteTime2' => dateSpider.to_s)
   rescue => e #Net::HTTPRequestTimeOut 
     if m_try == 0
       print "Error: ----->>> " + dateSpider.to_s + " 数据请求失败！ <<<-----\n"
