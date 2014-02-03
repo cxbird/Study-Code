@@ -126,8 +126,8 @@ def spiderData(mProject)
 		i += 1
 	end
 
-	#m_path = "/home/Napoleon/SpiderData/"
-	m_path = "./"
+	m_path = "/home/Napoleon/SpiderData/"
+	#m_path = "./"
 	if not Dir.exist?(m_path)
 		Dir.mkdir(m_path)
 	end
@@ -156,41 +156,81 @@ end
 def getCheckDate(check_year)
 	no_err_date = (Date.new(check_year.to_i,1,1)..Date.new(check_year.to_i,12,31))
 
-	# 文件不存在，肯定没有ERR，那肯定从新采集
+	# 1. 日志文件不存在，肯定没有ERR，那肯定从新采集
 	if not File.exist?("spider.log")
+    #p 1
 		return no_err_date
 	end
 
 	r_year = Regexp.new(check_year.to_s + "-*")
+  #p r_year
+  checkArray = []
 	open("spider.log","r") do |f|
 		checkArray = f.readlines.select { |a| a =~ r_year }
 	end
-	p checkArray
+	#p checkArray
 
-	# 没有数据，代表没有采集过
+	# 2. 日志文件存在，没有对应年份数据，代表没有采集过
 	if checkArray.empty?
+    #p 2
 		return no_err_date
 	end
 
-	errArray = checkArray.select { |v| =~ /ERR/ }
+=begin
+  判断太罗嗦，不简练
+  errArray = checkArray.select { |v| v =~ /ERR/ }
 	if errArray.empty?
-		# 有数据需要判断一下，如果没有错误，需要检测是否结束
 		if checkArray.last.split("|")[0] == check_year + "-12-31"
+		  # 3. 日志文件存在，有年份数据，没有ERR，但是已经结束
+      p 3
 			print check_year + " 年度数据已经完全正常采集，无需再次采集，谢谢使用。\n"
 			exit
 		else
+		  # 4. 日志文件存在，有年份数据，没有ERR，但是没有结束
+      p 4
 			at_date = checkArray.last.split("|")[0]
 			next_date = Date.parse(at_date) + 1
 			print check_year + " 年度数据已经采集到 " + at_date + " ，将从 " + next_date.to_s + " 继续采集。\n"
 			return (next_date..Date.new(check_year.to_i,12,31))
 		end
 	else
-		# 有错误数据,切换到最后一个错误，从那个日期重新开始
-		at_date = errArray.last.split("|")[0]
-		print check_year + " 年度数据采集到 " + at_date + " 时发生错误，将从 " + at_date + " 继续采集。\n"
-		return (Date.parse(at_date)..Date.new(check_year.to_i,12,31))
+    if checkArray.last.split("|")[0] == errArray.last.split("|")[0]
+		  # 5. 日志文件存在，有年份数据，有ERR，且最后一个ERR，也是该年份数据最后一项
+      p 5
+  		at_date = errArray.last.split("|")[0]
+	    print check_year + " 年度数据采集到 " + at_date + " 时发生错误，将从 " + at_date + " 继续采集。\n"
+  		return (Date.parse(at_date)..Date.new(check_year.to_i,12,31))
+    else
+      # if 是否最后一天
+      #   已经采集结束
+      # else
+      #   从那天之后取数据
+      # end
+    end
 	end
-
+=end
+  
+  l_Array = checkArray.last.split("|")
+  #p l_Array
+  if (l_Array[0] == check_year + "-12-31") and (l_Array[2].chomp == "OK")
+    # 3. 日志文件存在，有年份数据，当前最后没有ERR（允许之前有错误），但是已经结束
+    #p 3
+		print check_year + " 年度数据已经完全正常采集，无需再次采集，谢谢使用。\n"
+		exit
+  elsif (l_Array[0] != check_year + "-12-31") and (l_Array[2].chomp == "OK")
+		# 4. 日志文件存在，有年份数据，当前最后没有ERR（允许之前有错误），但是没有结束
+    #p 4
+		at_date = l_Array[0]
+		next_date = Date.parse(at_date) + 1
+		print check_year + " 年度数据已经采集到 " + at_date + " ，将从 " + next_date.to_s + " 继续采集。\n"
+		return (next_date..Date.new(check_year.to_i,12,31))
+  elsif l_Array[2].chomp =~ /ERR/
+    # 5. 日志文件存在，有年份数据，当前最后有ERR（允许之前也有错误）
+    #p 5
+  	at_date = l_Array[0]
+	  print check_year + " 年度数据采集到 " + at_date + " 时发生错误，将从 " + at_date + " 重新采集。\n"
+  	return (Date.parse(at_date)..Date.new(check_year.to_i,12,31))
+  end
 end
 
 =begin
@@ -209,9 +249,9 @@ end while m_year.strip.empty?
 #dateBegin = Date.new(m_year.to_i,1,1)
 #dateEnd = Date.new(m_year.to_i,12,31)
 #-----------------------------------------------------------
-dateRange = getCheckDate(m_year)
-p dateRange
-exit
+dateRange = getCheckDate(m_year.chomp)
+#p dateRange
+#exit
 
 #(dateBegin..dateEnd).each do |dateSpider|
 dateRange.each do |dateSpider|
